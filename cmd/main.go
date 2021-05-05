@@ -23,7 +23,7 @@ func init() {
 
 func main() {
 	if procCsvPath != "" {
-
+		ProcessFLUfile(procCsvPath)
 	} else {
 
 	}
