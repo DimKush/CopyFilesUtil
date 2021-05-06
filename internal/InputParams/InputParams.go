@@ -30,3 +30,10 @@ func (d *Unit) GetLimit() int {
 func (d *Unit) GetOffset() int {
 	return d.offset
 }
+
+func (d *Unit) Process(v int) error {
+	for i := 0; i < v; {
+		i++
+	}
+	return nil
+}
