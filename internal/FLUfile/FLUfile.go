@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -14,24 +15,31 @@ import (
 var flu_default_name = "FLUproc.csv"
 
 func parseUnit(slc []string) (InputParams.Unit, error) {
-	fmt.Println(slc)
 	var unit InputParams.Unit
-	unit.SetFromPath(slc[0])
-	unit.SetToPath(slc[1])
+	unit.SetFromPathFile(slc[0])
+	unit.SetToPathFile(slc[1])
 
-	tmpV, err := strconv.Atoi(slc[2])
-	if err != nil {
-		err := errors.New("Offset parameter is not a number.")
-		return InputParams.Unit{}, err
+	if slc[2] != "" {
+		tmpV, err := strconv.Atoi(slc[2])
+		if err != nil {
+			err := errors.New("Offset parameter is not a number.")
+			return InputParams.Unit{}, err
+		}
+		unit.SetOffset(tmpV)
 	}
-	unit.SetOffset(tmpV)
+	if slc[3] != "" {
+		tmpV, err := strconv.Atoi(slc[3])
+		if err != nil {
+			err := errors.New("Limit parameter is not a number.")
+			return InputParams.Unit{}, err
+		}
+		unit.SetLimit(tmpV)
+	}
 
-	tmpV, err = strconv.Atoi(slc[3])
-	if err != nil {
-		err := errors.New("Limit parameter is not a number.")
-		return InputParams.Unit{}, err
+	if unit.GetOffset() > unit.GetLimit() {
+		str := fmt.Sprintf("Error record from the file %v offset : %d can't be bigger that limit : %d", slc, unit.GetOffset(), unit.GetLimit())
+		return InputParams.Unit{}, errors.New(str)
 	}
-	unit.SetOffset(tmpV)
 
 	return unit, nil
 }
@@ -49,12 +57,15 @@ func parseFile(path string) (units []InputParams.Unit, err error) {
 
 	cnt := 0
 	for {
-		if cnt == 0 {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+
+		if strings.ToLower(record[0]) == "from" && strings.ToLower(record[1]) == "to" {
 			continue
 		}
-		fmt.Println("1")
-		record, err := reader.Read()
-		fmt.Println("2")
+
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -65,20 +76,23 @@ func parseFile(path string) (units []InputParams.Unit, err error) {
 		}
 
 		units = append(units, unit)
-
 		cnt++
 	}
-}
 
-//func
+	return units, nil
+}
 
 func ProcessFLUfile(path string) error {
 	if !strings.Contains(path, flu_default_name) {
 		err := errors.New("path doesn't contain the path to FLUproc.csv file.")
 		return err
 	}
-	_, err := parseFile(path)
+	units, err := parseFile(path)
 	if err != nil {
+		return err
+	}
+	if len(units) < 1 {
+		err := errors.New("Empty FLUproc.csv file.")
 		return err
 	}
 
