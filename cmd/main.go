@@ -2,6 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
+
+	"github.com/DimKush/CopyFilesUtil/internal/FLUfile"
 )
 
 // flag params
@@ -22,9 +26,14 @@ func init() {
 }
 
 func main() {
+	var err error
 	if procCsvPath != "" {
-		ProcessFLUfile(procCsvPath)
+		err = FLUfile.ProcessFLUfile(procCsvPath)
 	} else {
 
+	}
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
