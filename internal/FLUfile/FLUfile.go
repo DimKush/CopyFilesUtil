@@ -8,8 +8,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/DimKush/CopyFilesUtil/internal/InputParams"
+	"github.com/cheggaaa/pb"
 )
 
 var flu_default_name = "FLUproc.csv"
@@ -95,6 +98,30 @@ func ProcessFLUfile(path string) error {
 		err := errors.New("Empty FLUproc.csv file.")
 		return err
 	}
+	fmt.Println(units)
+	// parallel execution
+	count := len(units)
+	bar := pb.StartNew(count)
+
+	var wg sync.WaitGroup
+	v := 1
+	for _, val := range units {
+
+		wg.Add(1)
+		tmp := val
+
+		go func(param InputParams.Unit) {
+			defer wg.Done()
+			defer bar.Increment()
+
+			param.Process(100000 * v)
+			time.Sleep(5 * time.Second)
+		}(tmp)
+		v = 1000
+	}
+
+	wg.Wait()
+	bar.Finish()
 
 	return nil
 	// try to open
