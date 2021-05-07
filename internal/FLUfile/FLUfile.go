@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/DimKush/CopyFilesUtil/internal/InputParams"
 	"github.com/cheggaaa/pb"
@@ -100,26 +99,27 @@ func ProcessFLUfile(path string) error {
 	}
 	fmt.Println(units)
 	// parallel execution
-	count := len(units)
-	bar := pb.StartNew(count)
+	bar := pb.StartNew(len(units))
 
 	var wg sync.WaitGroup
-	v := 1
 	for _, val := range units {
 
 		wg.Add(1)
 		tmp := val
 
+		fmt.Print(tmp)
 		go func(param InputParams.Unit) {
 			defer wg.Done()
-			defer bar.Increment()
+			//defer bar.Increment()
+			//defer bar.Update()
 
-			param.Process(100000 * v)
-			time.Sleep(5 * time.Second)
+			param.Process()
 		}(tmp)
-		v = 1000
+		bar.Increment()
+		bar.Update()
 	}
 
+	bar.Update()
 	wg.Wait()
 	bar.Finish()
 

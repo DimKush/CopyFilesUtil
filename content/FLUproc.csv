@@ -1,3 +1,3 @@
 from,to,offset,limit
-../cmd/main.go,/home/dim/Desktop/trash/m.go,50,100
-../internal/FLUfile/main.go,/home/dim/Desktop/trash/FLUfile.go,,
+/home/dim/Desktop/Go/CopyFilesUtil/cmd/main.go,/home/dim/Desktop/trash/m.go,50,100
+/home/dim/Desktop/Go/CopyFilesUtil/cmd/main.go,/home/dim/Desktop/trash/FLUfile.go,,
