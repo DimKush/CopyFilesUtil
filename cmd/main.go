@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/DimKush/CopyFilesUtil/internal/CopyProcess"
 	"github.com/DimKush/CopyFilesUtil/internal/FLUfile"
 )
 
@@ -16,12 +17,12 @@ var offset int
 var procCsvPath string
 
 func init() {
-	flag.StringVar(&procCsvPath, "flu", "./FLUproc.csv", "path to the processing file")
 	flag.StringVar(&fromPath, "from", "", "the file to read from")
 	flag.StringVar(&toPath, "to", "", "the file to write")
-	flag.IntVar(&limit, "limit", 0, "limit of copied bytes")
 	flag.IntVar(&offset, "offset", 0, "offset of copied bytes")
+	flag.IntVar(&limit, "limit", 0, "limit of copied bytes")
 
+	flag.StringVar(&procCsvPath, "flu", "", "path to the processing file")
 	flag.Parse()
 }
 
@@ -30,7 +31,7 @@ func main() {
 	if procCsvPath != "" {
 		err = FLUfile.ProcessFLUfile(procCsvPath)
 	} else {
-
+		err = CopyProcess.CopyFile(fromPath, toPath, offset, limit)
 	}
 	if err != nil {
 		fmt.Println(err)
