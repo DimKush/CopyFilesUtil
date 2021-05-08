@@ -38,11 +38,6 @@ func parseUnit(slc []string) (InputParams.Unit, error) {
 		unit.SetLimit(tmpV)
 	}
 
-	if unit.GetOffset() > unit.GetLimit() {
-		str := fmt.Sprintf("Error record from the file %v offset : %d can't be bigger that limit : %d", slc, unit.GetOffset(), unit.GetLimit())
-		return InputParams.Unit{}, errors.New(str)
-	}
-
 	return unit, nil
 }
 

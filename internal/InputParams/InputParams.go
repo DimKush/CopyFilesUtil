@@ -1,5 +1,7 @@
 package InputParams
 
+import "github.com/DimKush/CopyFilesUtil/internal/CopyProcess"
+
 type Unit struct {
 	from   string
 	to     string
@@ -32,6 +34,6 @@ func (d *Unit) GetOffset() int {
 }
 
 func (d *Unit) Process() error {
-
+	CopyProcess.CopyFile(d.from, d.to, d.offset, d.limit)
 	return nil
 }
