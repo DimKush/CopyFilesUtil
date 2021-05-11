@@ -2,7 +2,6 @@ package CopyProcess
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,7 +9,7 @@ import (
 
 func checkOffset(offset int, limit int) error {
 	if offset >= limit {
-		return errors.New(fmt.Sprintf("Error offset %d can't be higher that limit %d.", offset, limit))
+		return fmt.Errorf("Error offset %d can't be higher that limit %d.", offset, limit)
 	}
 
 	return nil
@@ -27,13 +26,16 @@ func CopyFile(from string, to string, offset int, limit int) error {
 	br := bufio.NewReader(fin)
 
 	buf, err := ioutil.ReadAll(br)
+	if err != nil {
+		return err
+	}
 
 	if limit == 0 {
 		limit = len(buf)
 	}
 
 	if len(buf) < limit {
-		return errors.New(fmt.Sprintf("Incorrect vallues. limit %d can't be higher that file length %d", limit, len(buf)))
+		return fmt.Errorf("Incorrect vallues. limit %d can't be higher that file length %d", limit, len(buf))
 	}
 
 	err = checkOffset(offset, limit)
@@ -42,8 +44,14 @@ func CopyFile(from string, to string, offset int, limit int) error {
 	}
 
 	fout, err := os.OpenFile(to, os.O_CREATE|os.O_WRONLY, 0666)
-	bufout, err := fout.Write(buf[offset:limit])
+	if err != nil {
+		return err
+	}
 
+	bufout, err := fout.Write(buf[offset:limit])
+	if err != nil {
+		return err
+	}
 	fmt.Printf("%d", bufout)
 
 	return nil

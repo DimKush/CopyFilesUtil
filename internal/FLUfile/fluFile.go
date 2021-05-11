@@ -108,7 +108,7 @@ func ProcessFLUfile(path string) error {
 			//defer bar.Increment()
 			//defer bar.Update()
 
-			param.Process()
+			err = param.Process()
 		}(tmp)
 		bar.Increment()
 		bar.Update()
@@ -117,6 +117,9 @@ func ProcessFLUfile(path string) error {
 	bar.Update()
 	wg.Wait()
 	bar.Finish()
+	if err != nil {
+		return err
+	}
 
 	return nil
 	// try to open

@@ -20,7 +20,7 @@ func CreateTestedFiles() error {
 	if err != nil {
 		return err
 	}
-
+  
 	return nil
 }
 
@@ -40,7 +40,7 @@ func TestCheckFilePositive(t *testing.T) {
 
 	err = CopyFile("ut_in.txt", "ut_out.txt", 0, 0)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("Error in TestCheckFile(). CreateTestedFiles() returned an error : %s", err)
 	}
 
 	fout, err := os.OpenFile("ut_out.txt", os.O_RDONLY, 0666)
