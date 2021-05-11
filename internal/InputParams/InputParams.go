@@ -34,6 +34,9 @@ func (d *Unit) GetOffset() int {
 }
 
 func (d *Unit) Process() error {
-	CopyProcess.CopyFile(d.from, d.to, d.offset, d.limit)
+	err := CopyProcess.CopyFile(d.from, d.to, d.offset, d.limit)
+	if err != nil {
+		return err
+	}
 	return nil
 }

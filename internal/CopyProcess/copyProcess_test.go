@@ -16,8 +16,10 @@ func CreateTestedFiles() error {
 	}
 
 	str := "Hello unit test TestCheckOffset"
-	file.Write([]byte(str))
-
+	_, err = file.Write([]byte(str))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -35,7 +37,10 @@ func TestCheckFilePositive(t *testing.T) {
 		t.Fatalf("Error in TestCheckFile(). CreateTestedFiles() returned an error : %s", err)
 	}
 
-	CopyFile("ut_in.txt", "ut_out.txt", 0, 0)
+	err = CopyFile("ut_in.txt", "ut_out.txt", 0, 0)
+	if err != nil {
+		t.Fatalf("Error in TestCheckFile(). CreateTestedFiles() returned an error : %s", err)
+	}
 
 	fout, err := os.OpenFile("ut_out.txt", os.O_RDONLY, 0666)
 	if err != nil {
