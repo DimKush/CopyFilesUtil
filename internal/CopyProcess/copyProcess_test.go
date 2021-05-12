@@ -10,6 +10,7 @@ import (
 //func helpers
 
 func CreateTestedFiles() error {
+
 	file, err := os.OpenFile("ut_in.txt", os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
@@ -20,7 +21,7 @@ func CreateTestedFiles() error {
 	if err != nil {
 		return err
 	}
-  
+
 	return nil
 }
 
