@@ -32,3 +32,7 @@ func TestParseUnit(t *testing.T) {
 
 	os.Remove("FLUproc.csv")
 }
+
+func TestGiveResults(t *testing.T) {
+
+}
